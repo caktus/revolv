@@ -646,7 +646,7 @@ a:hover {
 .active-projects-module .info-main .blue-bar, .active-projects-module .info-main .dark-blue-bar {
   font-family: 'Source Sans Pro';
   font-weight: 700;
-  font-size: 16px;
+  font-size: 14px;
   color: #fff;
   height: 60px;
   line-height: 60px;
@@ -662,7 +662,7 @@ a:hover {
 }
 .active-projects-module .info-main .actual-energy,
 .details-active-project-module .info-main .actual-energy {
-  max-width: 40%;
+  max-width: 60%;
   overflow-x: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -10960,6 +10960,11 @@ label.checkmark.animate:after {
 .dashboard .title-active-projects {
   margin-top: 3em;
   margin-bottom: 3em;
+}
+
+.dashboard .btn-reinvest{
+  letter-spacing: 2px;
+  padding-left: 10px;
 }
 
 /* Project draft mode */

@@ -14,7 +14,7 @@
         <div class="info">
             <div>Built</div>
             <span class="val">{{ statistics.kwh }} </span>
-            <span class="units">kw</span>
+            <span class="units">watts</span>
             <div>of solar energy capacity</div>
         </div>
       </div>
@@ -35,7 +35,8 @@
         </div>
         <div class="info">
             <div>Equivalent to planting</div>
-            <span class="val">{{ statistics.trees }} </span>
+            <!--<span class="val">{{ statistics.trees }} </span>-->
+	   <span class="val">1.15</span> 
             <span class="units">acres</span>
             <div>of trees</div>
         </div>
@@ -71,7 +72,9 @@
         </div>
       </div>
   </div>
-
+  <a href="https://re-volv.org/what-we-do/projects">
+  <div class="btn-blue btn-reinvest">REINVEST $0 IN ADDITIONAL SOLAR PROJECTS</div>
+  </a>
 {% if donated_projects %}
   <div class="row">
     <p class="title-blue-border title-active-projects">PROJECTS YOU'VE SUPPORTED:</p>

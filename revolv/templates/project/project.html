@@ -190,7 +190,7 @@
             <div class="inputs">
               <label for="value">Donation to the project</label>
               <div class="input-group">
-                <input type="number" name="value" min="0" value="10" step="1" class="form-control">
+                <input type="number" name="value" min="0" value="50" step="1" class="form-control">
                   <span class="input-group-addon">$</span>
               </div>
 
@@ -284,18 +284,15 @@ $(function ($) {
     , locale: 'auto'
     , name: 'RE-volv'
   });
-
   $(window).on('popstate', function () {
     handler.close();
   });
-
   $('.stripe-button-el').on('click', function (e) {
     e.preventDefault();
     var $form = $(this).closest('form');
     var serialized = $form.serializeArray();
     var endpoint = $form.attr('action');
     var amount, metadata;
-
     $.each(serialized, function () {
       if (this.name === 'amount_cents') {
         amount = this.value;
@@ -304,7 +301,6 @@ $(function ($) {
         metadata = this.value;
       }
     });
-
     if (typeof amount !== 'undefined') {
       handler.open({
         description: 'Donate $' + parseFloat((amount / 100).toFixed(2)).toLocaleString()
@@ -313,7 +309,6 @@ $(function ($) {
         , token: function (token) {
           var id = token.id;
           var email = token.email;
-
           var $id = $('<input>')
             .attr('type', 'hidden')
             .attr('name', 'stripeToken')
@@ -322,10 +317,8 @@ $(function ($) {
             .attr('type', 'hidden')
             .attr('name', 'stripeEmail')
             .val(email);
-
           $id.appendTo($form);
           $email.appendTo($form);
-
           $form.trigger('submit');
         }
       });
@@ -380,32 +373,25 @@ if (embedUrl === "error") {
   $(function ($) {
     $('.payment-module').each(function () {
       var $module = $(this);
-
       var $value = $module.find('input[name="value"]');
       if (!$value.length) {
         $value = $module.find('.value-txt');
       }
-
       var $tip = $module.find('input[name="tip_edit"]');
       var $total = $module.find('input[name="total"]');
-
       var $amount = $module.find('input[name="amount_cents"]');
       var $meta = $module.find('input[name="metadata"]');
-
       function update () {
         var val = parseFloat($value.val() || $value.data('value'));
         var scale = parseFloat($tip.val()) / 100;
         var added = scale * val;
-
         if (isNaN(val) || isNaN(scale)) {
           return false;
         }
-
         $amount.val(Math.round((val + added) * 100));
         $meta.val(Math.round(added * 100));
         $total.val((val + added).toFixed(2));
       }
-
       function prepress (e) {
         /*
           Prevent the user from ever entering in "-".
@@ -413,7 +399,6 @@ if (embedUrl === "error") {
         if (e.keyCode === 189 || e.keyCode === 187) {
           e.preventDefault();
         }
-
         /*
           If we hook this to the 'keyup' event, there's a noticeable delay
           before the reversion takes place. This ensures that it happens
@@ -421,7 +406,6 @@ if (embedUrl === "error") {
         */
         setTimeout(postpress.bind(this), 0);
       }
-
       function postpress () {
         /*
           Revert changes to inputs that take us past 2 decimal points.
@@ -431,12 +415,10 @@ if (embedUrl === "error") {
           $(this).val((val+'').match(/^\d+\.\d\d/)[0]);
         }
       }
-
       $value.on('keydown', prepress);
       $tip.on('keydown', prepress);
       $value.on('change keyup', update);
       $tip.on('change keyup', update);
-
       update();
     });
   });
