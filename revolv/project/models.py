@@ -200,6 +200,12 @@ class Project(models.Model):
         decimal_places=2,
         help_text='How much do you aim to raise for this project?'
     )
+    """total_kwh_value = models.DecimalField(
+        max_digits=15,
+        decimal_places=2,
+        default=0,
+        help_text='How much is the total kWH value for 25 years to this project?'
+    )"""
     title = models.CharField(
         max_length=255,
         help_text='How would you like to title this project?'
@@ -681,7 +687,7 @@ class Project(models.Model):
         self.save()
 
     def __unicode__(self):
-        return self.title
+         return self.title + '-' + self.project_status
 
 
 class ProjectUpdate(models.Model):

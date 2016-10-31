@@ -1,4 +1,3 @@
-
 Revolv
 ========================
 
@@ -10,7 +9,6 @@ local development system:
 - NodeJS >= 4.2
 - `pip <http://www.pip-installer.org/>`_ >= 1.5
 - `virtualenv <http://www.virtualenv.org/>`_ >= 1.10
-- `virtualenvwrapper <http://pypi.python.org/pypi/virtualenvwrapper>`_ >= 3.0
 - Postgres >= 9.3
 - git >= 1.7
 
@@ -29,16 +27,16 @@ Getting Started
 
 First clone the repository from Github and switch to the new directory::
 
-    $ git clone git@github.com:caktus/revolv.git
+    $ git clone git@github.com:RE-volv/revolv.git
     $ cd revolv
 
-To setup your local environment you can use the quickstart make target `setup`, which will
-install both Python and Javascript dependencies (via pip and npm) into a virtualenv named
-"revolv", configure a local django settings file, and create a database via
-Postgres named "revolv" with all migrations run::
+If you like, you can do all of the following for the first time with the quickstart make
+target `setup`, which will install both Python and Javascript dependencies (via pip and
+npm) into a virtualenv named "venv", configure a local django settings file, and create a
+database via Postgres named "revolv" with all migrations run::
 
     $ make setup
-    $ workon revolv
+    $ source venv/bin/activate
 
 If you require a non-standard setup, you can walk through the manual setup steps below making
 adjustments as necessary to your needs.
@@ -48,7 +46,7 @@ necessary requirements::
 
     # Check that you have python2.7 installed
     $ which python2.7
-    $ mkvirtualenv revolv -p `which python2.7`
+    $ virtualenv revolv -p `which python2.7`
     (revolv)$ pip install -r requirements/dev.txt
     (revolv)$ npm install
 
@@ -98,19 +96,26 @@ The deployment of requires Fabric but Fabric does not yet support Python 3. You
 must either create a new virtualenv for the deployment::
 
     # Create a new virtualenv for the deployment
-    $ mkvirtualenv revolv-deploy -p `which python2.7`
+    $ virtualenv revolv-deploy -p `which python2.7`
     (revolv-deploy)$ pip install -r requirements/deploy.txt
 
-or install the deploy requirements
-globally::
-
-    $ sudo pip install -r requirements/deploy.txt
-
-
-You can deploy changes to a particular environment with
+You can then deploy changes to a particular environment with
 the ``deploy`` command::
 
     $ fab staging deploy
 
-New requirements or migrations are detected by parsing the VCS changes and
+New requirements or migrations are detected by parsing the VCS changes on the production server and
 will be installed/run automatically.
+
+Deploying to production
+----------
+
+To deploy to production, you'll need to be in the list of devs at conf/pillar/devs.sls. If you are, you can run
+
+    fab production deploy
+
+The script will take 3-4 minutes to run, please be patient. You should see green output - if you see errors with the following output:
+
+    AttributeError: 'Requirement' object has no attribute 'project_name'
+    
+Then check out [this issue](https://github.com/saltstack/salt/issues/33163). Usually, ssh'ing into the AWS machine and running `sudo pip install pip==8.1.1` will fix this issue.

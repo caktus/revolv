@@ -2,51 +2,17 @@
 __pycache__/
 *.py[cod]
 
-# C extensions
-*.so
-
 # VIM
 *.sw[po]
 *.un~
 
 # Virtualenv
 venv
-
-# Distribution / packaging
-.Python
-env/
-build/
-develop-eggs/
-dist/
-eggs/
-parts/
-sdist/
-var/
-*.egg-info/
-.installed.cfg
-*.egg
+revolv-deploy
 
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
-
-# Unit test / coverage reports
-.tox/
-.coverage
-.cache
-nosetests.xml
-coverage.xml
-
-# Translations
-*.mo
-
-# Mr Developer
-.mr.developer.cfg
-.project
-.pydevproject
-
-# Rope
-.ropeproject
 
 # Django stuff:
 *.log
@@ -54,9 +20,6 @@ coverage.xml
 staticfiles/
 uploads/
 celerybeat-schedule
-
-# Sphinx documentation
-docs/_build/
 
 # OS X
 .DS_Store
@@ -69,6 +32,7 @@ node_modules/
 .revolv_bash_profile
 .vagrant
 celerybeat.pid
+
 # IDEA
 .idea
 
@@ -88,3 +52,4 @@ node_modules
 
 # Generated css
 revolv/static/*.css
+revolv/static/dist/**/*.css

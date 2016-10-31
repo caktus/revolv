@@ -16,7 +16,6 @@
 {% endblock %}
 
 {% block javascripts %}
-
     <script type="text/javascript" src="{% static "js/vendor/skrollr.min.js" %}"></script>
     <script type="text/javascript" src="{% static "js/vendor/skrollr.menu.min.js" %}"></script>
     <script type="text/javascript">
@@ -35,7 +34,7 @@
             {% if error_msg %}
                 <div class="divider-title "><h5>{{ error_msg }}</h5></div>
             {% else %}
-                <div class="divider-title ">You have ${{ reinvestment_amount }} to reinvest. Pick a project below to back!</div>
+                <div class="divider-title ">You have ${{ reinvestment_amount|floatformat:2 }} to reinvest. Pick a project below to back!</div>
             {% endif %}
         {% else %}
             {% if active_projects|length == 1%}
@@ -52,9 +51,10 @@
                 <!-- Call to action -->
                 {% if not is_reinvestment %}
                 <h2>{{ settings.revolv_cms.ActiveProjectsPageSettings.join_the_movement }}</h2>
-                <a href="mailto:info@re-volv.org" class="donate button">{{ settings.revolv_cms.ActiveProjectsPageSettings.start_funding_button_text }}</a>
+                <a href="https://docs.google.com/forms/d/10zU9-ap0IlInsraWvDvWxGxasjYOHsQvwjgr33YVmxE/viewform" class="donate button">{{ settings.revolv_cms.ActiveProjectsPageSettings.start_funding_button_text }}</a>
                 {% endif %}
             </div>
         </div>
     {% endspaceless %}
 {% endblock %}
+

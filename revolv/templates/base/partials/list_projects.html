@@ -7,13 +7,13 @@
       <div class="col-md-4">
         <div class="module-box">
           <div class="img-main">
-            <a href="{% url "project:view" pk=active_project.pk %}" class="img-link">
+            <a href="{% url "project:project_reinvest" pk=active_project.pk %}" class="img-link">
               <span class="txt-table">
                 <span class="txt">
                     {{ active_project.title }}
                 </span>
               </span>
-              <div class="img" style="background-image:url({% static 'images/solar-panels.jpg' %})"></div>
+             <div class="img" style="background-image:url('{{MEDIA_URL}}{{active_project.cover_photo.url }}' )"></div>
             </a>
             <div class="funded-round">
               <div class="status-circular">

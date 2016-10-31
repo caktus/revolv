@@ -5,7 +5,7 @@ environment: production
 domain: re-volv.org
 
 repo:
-  url: git@github.com:caktus/revolv.git
+  url: git@github.com:RE-volv/revolv.git
   branch: master
 
 # Addtional public environment variables to set for the project

@@ -40,45 +40,31 @@ staging-deploy-key: conf/staging.pub.ssh
 
 production-deploy-key: conf/production.pub.ssh
 
-# Translation helpers
-makemessages:
-	# Extract English messages from our source code
-	python manage.py makemessages --ignore 'conf/*' --ignore 'docs/*' --ignore 'requirements/*' \
-		--no-location --no-obsolete -l en
-
 compilemessages:
 	# Compile PO files into the MO files that Django will use at runtime
 	python manage.py compilemessages
 
-pushmessages:
-	# Upload the latest English PO file to Transifex
-	tx push -s
-
-pullmessages:
-	# Pull the latest Arabic PO file from Transifex
-	tx pull -af
-
 setup:
-	virtualenv -p `which python2.7` $(WORKON_HOME)/revolv
-	$(WORKON_HOME)/revolv/bin/pip install -U pip wheel
-	$(WORKON_HOME)/revolv/bin/pip install -Ur requirements/dev.txt
+	virtualenv -p `which python2.7` venv
+	venv/bin/pip install -U pip wheel
+	venv/bin/pip install -Ur requirements/dev.txt
 	npm install
 	npm update
 	cp revolv/settings/local.example.py revolv/settings/local.py
 	echo "DJANGO_SETTINGS_MODULE=revolv.settings.local" > .env
 	createdb -E UTF-8 revolv
-	$(WORKON_HOME)/revolv/bin/python manage.py migrate
+	venv/bin/python manage.py migrate
 	if [ -e project.travis.yml ] ; then mv project.travis.yml .travis.yml; fi
 	@echo
-	@echo "The revolv project is now setup on your machine."
+	@echo "The revolv project is now set up on your machine."
 	@echo "Run the following commands to activate the virtual environment and run the"
 	@echo "development server:"
 	@echo
-	@echo "	workon revolv"
+	@echo " source venv/bin/activate"
 	@echo "	npm run dev"
 
 update:
-	$(WORKON_HOME)/revolv/bin/pip install -U -r requirements/dev.txt
+	venv/bin/pip install -U -r requirements/dev.txt
 	npm install
 	npm update
 

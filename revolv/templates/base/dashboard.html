@@ -62,19 +62,4 @@
     {% block body-bottom %}
     {% endblock %}
 
-    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.2/js/toastr.min.js"></script>
-
-    <script src="{% static "js/base/dashboard.js" %}"></script>
-    <script src="{% static "js/base/dashboard_project.js" %}"></script>
-
-    {% if messages %}
-        <script>
-            toastr.options.positionClass = "toast-bottom-right";
-        </script>
-        {% for message in messages %}
-        <script>
-            toastr.{{ message.tags }}('{{ message }}')
-        </script>
-        {% endfor %}
-    {% endif %}
 {% endblock %}

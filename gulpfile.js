@@ -6,6 +6,7 @@ var rename = require('gulp-rename');
 var sass = require('gulp-sass');
 var livereload = require('gulp-livereload');
 var fileExists = require('file-exists');
+var isThere = require('is-there');
 
 var spawn = require('child_process').spawn;
 var argv = require('yargs')
@@ -55,6 +56,11 @@ function rebuild(options) {
 
 // Starts our development workflow
 gulp.task('default', function (cb) {
+  if (!isThere("venv/bin/python")) {
+    console.log(chalk.red("No venv found, so we can't run the dev server. Please see README.md to set up your venv."));
+    console.log(chalk.red("Maybe you forgot to run `venv/bin/activate`?"));
+    return;
+  }
   livereload.listen();
 
   rebuild({
@@ -63,7 +69,7 @@ gulp.task('default', function (cb) {
 
   console.log("Starting Django runserver http://"+argv.address+":"+argv.port+"/");
   var args = ["manage.py", "runserver", argv.address+":"+argv.port];
-  var runserver = spawn("python", args, {
+  var runserver = spawn("venv/bin/python", args, {
     stdio: "inherit",
   });
   runserver.on('close', function(code) {
@@ -73,7 +79,6 @@ gulp.task('default', function (cb) {
       console.log('Django runserver exited normally.');
     }
   });
-
 });
 
 gulp.task('deploy', function() {

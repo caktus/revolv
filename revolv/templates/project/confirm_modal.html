@@ -1,0 +1,38 @@
+ <div class="modal fade" id="confirmModal" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+
+      <div class="modal-content modal-reinvest" style="width: 80%;margin-top: 30%;margin-left: 8%;">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Confirm Reinvestment <span id="amt_pop"></span></h4>
+        </div>
+        <div class="modal-body">
+          <p>Thank you for reinvesting your Solar Bucks in this project! We're now {{ project.percent_complete }}% of the way there! Would you also like to donate to help <b>{{ project.title }}</b> go solar?</p>
+        </div>
+        <div class="modal-footer">
+          <form action="{% url 'project:reinvest' pk=project.pk %}" method="POST" >
+          {% csrf_token %}
+            <input id = "amount" type="hidden" name="amount" value="">
+            <button  class="btn btn-primary">Yes, definitely!</button>
+             <a href="{% url 'dashboard' %}"  class="btn btn-primary">Not right now</a>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <script>
+            function invest_amt(e){
+                 document.getElementById("amt_pop").innerHTML = ' $' + document.getElementById("amt").value;
+                 document.getElementById("amount").value = document.getElementById("amt").value;
+                 console.log("Heyy", parseFloat($("#amt").val()))
+                 if (parseFloat($("#amt").val()) > {{reinvestment_amount}} || parseFloat($("#amt").val()) < 0.01 || $("#amt").val() == ""){
+                        toastr.options.positionClass = "toast-bottom-right";
+                        toastr.error('Invalid amount');
+                         e.stopPropagation();
+                 }
+            }
+ </script>
+

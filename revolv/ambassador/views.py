@@ -18,6 +18,10 @@ class AmbassadorDashboardView(BaseStaffDashboardView):
 
     def get_context_data(self, **kwargs):
         context = super(AmbassadorDashboardView, self).get_context_data(**kwargs)
-
+        if self.user_profile and self.user_profile.reinvest_pool > 0.0:
+            context["reinvestment_amount"] = self.user_profile.reinvest_pool
+        else:
+            context["reinvestment_amount"] = 0.0
         context["project_dict"][ProjectGroup('Drafted Projects', "drafted")] = Project.objects.get_drafted(*self.get_filter_args())
         return context
+

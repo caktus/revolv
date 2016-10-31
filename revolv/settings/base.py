@@ -121,9 +121,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'revolv',
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '',
+        'USER': 'revolv',
+        'PASSWORD': 'revolv',
+        # you have have to change this to "localhost"
+        'HOST': 'localhost',
         'PORT': '',
     }
 }

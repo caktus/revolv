@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, url
 from revolv.base.users import is_ambassador, is_logged_in
 from revolv.project.views import (CreateProjectView, EditProjectUpdateView,
-                                  PostProjectUpdateView, ProjectView,
+                                  PostProjectUpdateView, ProjectView,ProjectReinvestView,
                                   ReviewProjectView, SubmitDonationView,
                                   UpdateProjectView, ProjectListReinvestmentView,
                                   stripe_payment)
@@ -12,6 +12,7 @@ urlpatterns = patterns(
     url(r'^(?P<pk>\d+)/stripe/$', stripe_payment, name='stripe_payment'),
     url(r'^(?P<pk>\d+)/edit$', is_ambassador(UpdateProjectView.as_view()), name='edit'),
     url(r'^(?P<pk>\d+)/$', ProjectView.as_view(), name='view'),
+    url(r'^(?P<pk>\d+)/reinvest_page/$', ProjectReinvestView.as_view(), name='project_reinvest'),
     url(r'^(?P<pk>\d+)/reinvest/$', 'revolv.project.views.reinvest', name='reinvest'),
     url(r'^(?P<pk>\d+)/review$', is_ambassador(ReviewProjectView.as_view()), name='review'),
     url(r'reinvest_list/$', is_logged_in(ProjectListReinvestmentView.as_view()), name='reinvest_list'),

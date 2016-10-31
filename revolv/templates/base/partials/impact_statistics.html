@@ -1,12 +1,24 @@
 {% load staticfiles %}
 {% load humanize %}
 {% load revolv_cms_tags %}
-
 <div class="impact">
   <h2>Thank you for investing in clean energy!</h2>
   <h3>Your impact to date:</h3>
-
   <div class="row stats">
+      <div class="col-sm-4 col-md-2 col-xs-6">
+            <div class="donation_info">
+             <div>AMOUNT DONATED</div>
+            <span class="amount_donated">${{ statistics.total_donated }}</span>
+        </div>
+          <div class="logo_circle">
+          <img src="{% static "images/dashboard/Kiva_circle.jpg" %}" />
+        </div>
+        <div class="info">
+            <span class="val">${{statistics.reinvestment}} </span>
+            <div>AMOUNT REINVESTED</div>
+        </div>
+      </div>
+
       <div class="col-sm-4 col-md-2 col-xs-6">
         <div class="stats-img">
           <img src="{% static "images/dashboard/solar-panel-desktop.png" %}" />
@@ -14,7 +26,7 @@
         <div class="info">
             <div>Built</div>
             <span class="val">{{ statistics.kwh }} </span>
-            <span class="units">kw</span>
+            <span class="units">watts</span>
             <div>of solar energy capacity</div>
         </div>
       </div>
@@ -35,7 +47,8 @@
         </div>
         <div class="info">
             <div>Equivalent to planting</div>
-            <span class="val">{{ statistics.trees }} </span>
+            <!--<span class="val">{{ statistics.trees }} </span>-->
+	   <span class="val">1.15</span>
             <span class="units">acres</span>
             <div>of trees</div>
         </div>
@@ -61,17 +74,11 @@
             <div>in their community</div>
         </div>
       </div>
-      <div class="col-sm-4 col-md-2 col-xs-6">
-        <div class="stats-img">
-          <img src="{% static "images/dashboard/money-desktop.png" %}" />
-        </div>
-        <div class="info">
-            <div>Total amount donated</div>
-            <span class="val">{{ statistics.total_donated }}</span>
-        </div>
-      </div>
-  </div>
 
+  </div>
+  <a href="{% url "reinvest_list" %}">
+  <div class="btn-blue">REINVEST ${{reinvestment_amount|floatformat:2}} IN ADDITIONAL SOLAR PROJECTS</div>
+  </a>
 {% if donated_projects %}
   <div class="row">
     <p class="title-blue-border title-active-projects">PROJECTS YOU'VE SUPPORTED:</p>

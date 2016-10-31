@@ -1,5 +1,6 @@
 .dashboard {
     background-color: #fff;
+    font-family: 'Source Sans Pro', Arial, Helvetica, sans-serif;
 }
 
 .impact {
@@ -18,4 +19,23 @@
     padding-right: 38px;
     padding-top: 20px;
     padding-bottom: 20px;
+}
+
+/*For background logo_circle on dashboard*/
+
+.donation_info {
+    text-transform: uppercase;
+    margin-bottom: -11px;
+    font-size: 11px;
+}
+ .logo_circle{
+     height: 41px;
+    width: 67px;
+    display: inline-block;
+    vertical-align: middle;
+ }
+
+.amount_donated {
+    font-size: 52px;
+    font-weight: bold;
 }

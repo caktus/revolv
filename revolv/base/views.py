@@ -18,12 +18,13 @@ from django.template.context import RequestContext
 from revolv.base.forms import SignupForm
 from revolv.base.users import UserDataMixin
 from revolv.base.utils import ProjectGroup
-from revolv.payments.models import Payment
+from revolv.payments.models import Payment, Tip
 from revolv.project.models import Category, Project
 from revolv.project.utils import aggregate_stats
 from revolv.donor.views import humanize_integers, total_donations
 from revolv.base.models import RevolvUserProfile
 from revolv.tasks.sfdc import send_signup_info
+from itertools import chain
 
 from social.apps.django_app.default.models import UserSocialAuth
 
@@ -42,16 +43,24 @@ class HomePageView(UserDataMixin, TemplateView):
         """
         Returns: A dictionary of RE-volv wide impact figures.
         """
-        carbon_saved_by_month = Project.objects.statistics().pounds_carbon_saved_per_month
+        #carbon_saved_by_month = Project.objects.statistics().pounds_carbon_saved_per_month
         # Assume 20 year lifetime.
         # We use str() to avoid django adding commas to integer in the template.
-        carbon_saved = str(int(carbon_saved_by_month * 12 * 20))
+        #carbon_saved = str(int(carbon_saved_by_month * 12 * 20))
+        people_donated_sys_count = RevolvUserProfile.objects.exclude(project=None).count()
+        people_donated_stat_Count = str(int(people_donated_sys_count + 615))
+        #total_kwh = float(Project.objects.aggregate(n=Sum('total_kwh_value'))['n'])
+        #carbon_value_calc = total_kwh * 1.5
+        #funding_goal_value = float(Project.objects.aggregate(n=Sum('funding_goal'))['n'])
+	#amount_invested_value = Payment.objects.aggregate(n=Sum('amount'))['n']
+        #final_carbon_avoided = str(int(carbon_value_calc / funding_goal_value * amount_invested_value + 3057319))
         global_impacts = {
             # Users who have backed at least one project:
-            'num_people_donated': RevolvUserProfile.objects.exclude(project=None).count(),
-            'num_projects': Project.objects.all().count(),
-            'num_people_affected': Project.objects.aggregate(n=Sum('people_affected'))['n'],
-            'co2_avoided': carbon_saved,
+            'num_people_donated': people_donated_stat_Count,
+            'num_projects': Project.objects.get_completed().count(),
+            'num_people_affected': Project.objects.filter(project_status=Project.COMPLETED).aggregate(n=Sum('people_affected'))['n'],
+            #'co2_avoided': final_carbon_avoided,
+	   	'co2_avoided': 7452670,
         }
         return global_impacts
 
@@ -59,9 +68,13 @@ class HomePageView(UserDataMixin, TemplateView):
         context = super(HomePageView, self).get_context_data(**kwargs)
         featured_projects = Project.objects.get_featured(HomePageView.FEATURED_PROJECT_TO_SHOW)
         active_projects = Project.objects.get_active()
+        context["active_projects"] = filter(lambda p: p.amount_left > 0.0, active_projects)
+        completed_projects = Project.objects.get_completed()
         context["first_project"] = active_projects[0] if len(active_projects) > 0 else None
         # Get top 6 featured projects, Changed to active Projects in final fix
         context["featured_projects"] = active_projects[:6]
+        #accept return value from project/model.py and display it on project/home.html file
+        context["completed_featured_projects"] = completed_projects[:6]
         context["completed_projects_count"] = Project.objects.get_completed().count()
         context["total_donors_count"] = Payment.objects.total_distinct_organic_donors()
         context["global_impacts"] = self.get_global_impacts()
@@ -122,12 +135,13 @@ class CategoryPreferenceSetterView(UserDataMixin, View):
 class ProjectListView(UserDataMixin, TemplateView):
     """ Base View of all active projects
     """
+    model = Project
     template_name = 'base/projects-list.html'
 
     def get_context_data(self, **kwargs):
         context = super(ProjectListView, self).get_context_data(**kwargs)
         active = Project.objects.get_active()
-        context["active_projects"] = active
+        context["active_projects"] = filter(lambda p: p.amount_left > 0.0, active)
         context["is_reinvestment"] = False
         return context
 
@@ -280,6 +294,25 @@ class LogoutView(UserDataMixin, View):
         messages.success(self.request, 'Logged out successfully')
         return redirect('home')
 
+class ReinvestmentRedirect(UserDataMixin, TemplateView):
+    '''
+    Redirect user to the active project list whenever user has reinvestment amount.
+    '''
+    model = Project
+    template_name = 'base/projects-list.html'
+
+    def get_object(self):
+        return self.model.objects.get(pk=self.request.user.pk)
+
+    def get_context_data(self, **kwargs):
+        context = super(ReinvestmentRedirect, self).get_context_data(**kwargs)
+        active = Project.objects.get_active()
+        context["active_projects"] = filter(lambda p: p.amount_left > 0.0, active)
+        if self.user_profile and self.user_profile.reinvest_pool > 0.0:
+            context["is_reinvestment"] = True
+            context["reinvestment_amount"] = self.user_profile.reinvest_pool
+
+        return context
 
 class DashboardRedirect(UserDataMixin, View):
     """

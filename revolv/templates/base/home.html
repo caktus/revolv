@@ -38,9 +38,8 @@
             <a href="{% url 'signin' %}#signup" class="component-link btn-blue pull-left btn-donate" data-component="signup">SIGN UP</a>
             <a href="{% url 'signin' %}#login" class="component-link btn-blue pull-left btn-donate" data-component="login">SIGN IN</a>
         {% endif %}
-
       </div>
-      <a href="{% url 'projects_list' %}" class="btn-blue btn-donate pull-left after-scroll">DONATE NOW</a>
+      <a data-amounts='10,20,30,70,100,200,1000' data-custom class="commitchange-donate btn-blue btn-donate pull-left after-scroll">DONATE NOW</a>
     </div>
   </div>
 </header>
@@ -53,20 +52,21 @@
     <div class="section-video-area">
       <div class="video-opacity"></div>
       <img src="{% static 'images/top-section-video.jpg' %}" class="hide" alt="Video">
-      <video id="video-player" autoplay loop preload="none">
-        <source type="video/youtube" src="https://www.youtube.com/embed/th_u9EdzCYw" />
-      </video>
+      <iframe width="100%"
+        src="https://www.youtube.com/embed/th_u9EdzCYw/embed/th_u9EdzCYw?autoplay=1&controls=0&loop=1&showinfo=0&playlist=th_u9EdzCYw" >
+       </iframe>
     </div>
   </div>
-  <!-- end .section-video -->
-  <div class="section-video-overlay">
-    <div class="titles">
-      {{ settings.revolv_cms.MainPageSettings.site_tagline|safe }}
+     <div class="section-video-overlay">
+    <div class="wrapper">
+      <div class="titles">
+        {{ settings.revolv_cms.MainPageSettings.site_tagline|safe }}
+      </div>
+      <p>
+        {{ settings.revolv_cms.MainPageSettings.site_subheading|safe }}
+      </p>
+      <a data-amounts='10,20,30,70,100,200,1000' data-custom class="commitchange-donate btn-blue btn-donate-now">{{ settings.revolv_cms.MainPageSettings.learn_button_text }}</a>
     </div>
-    <p>
-      {{ settings.revolv_cms.MainPageSettings.site_subheading|safe }}
-    </p>
-    <a href="{% url 'projects_list' %}" class="btn-blue btn-donate-now">{{ settings.revolv_cms.MainPageSettings.learn_button_text }}</a>
   </div>
 </div>
 <!-- end .top-section -->
@@ -76,7 +76,7 @@
     <div class="title-blue-border title-active-projects">ACTIVE PROJECTS</div>
     <div class="row">
 
-      {% for active_project in featured_projects %}
+      {% for active_project in active_projects %}
       <div class="col-md-4">
         <div class="module-box">
           <div class="img-main">
@@ -86,7 +86,7 @@
                     {{ active_project.title }}
                 </span>
               </span>
-              <div class="img" style="background-image:url({% static 'images/solar-panels.jpg' %})"></div>
+              <div class="img" style="background-image:url('{{MEDIA_URL}}{{active_project.cover_photo.url }}' )"></div>
             </a>
             <div class="funded-round">
               <div class="status-circular">
@@ -132,6 +132,67 @@
 </div>
 <!-- end .active-projects-module -->
 
+<div class="active-projects-module animated">
+  <div class="container">
+      <div class="title-blue-border title-active-projects">COMPLETED PROJECTS</div>
+    <div class="row">
+
+      {% for completed_project in completed_featured_projects %}
+      <div class="col-md-4">
+        <div class="module-box">
+          <div class="img-main">
+            <a href="{% url "project:view" pk=completed_project.pk %}" class="img-link">
+              <span class="txt-table">
+                <span class="txt">
+                    {{ completed_project.title }}
+                </span>
+              </span>
+              <div class="img" style="background-image:url('{{MEDIA_URL}}{{completed_project.cover_photo.url }}' )"><span class="completed_project"><img src="/static/images/COMPLETED.png" alt="Project is completed" ></span></div>
+            </a>
+            <div class="funded-round">
+              <div class="status-circular">
+                <span class="status-text">
+                  <span class="round-depict"><span>OF</span> ${{ completed_project.funding_goal|floatformat:0|intcomma }}</span>
+                </span>
+                <!-- end .status-text -->
+                <div class="status-indicator desktop-circle">
+                  <input type="text" value="{{ completed_project.percent_complete }}" data-min="0" data-width="105" data-height="105" data-bgcolor="#fff" data-fgcolor="#14b1e7" data-max="100" data-readonly="true" data-thickness=".24">
+                </div>
+                <div class="status-indicator small-circle">
+                  <input type="text" value="{{ completed_project.percent_complete }}" data-min="0" data-width="92" data-height="92" data-bgcolor="#fff" data-fgcolor="#14b1e7" data-max="100" data-readonly="true" data-thickness=".2">
+                </div>
+                <div class="status-indicator tablet-circle">
+                  <input type="text" value="{{ completed_project.percent_complete }}" data-min="0" data-width="200" data-height="200" data-bgcolor="#fff" data-fgcolor="#14b1e7" data-max="100" data-readonly="true" data-thickness=".12">
+                </div>
+                <div class="status-indicator mobile-circle">
+                  <input type="text" value="{{ completed_project.percent_complete }}" data-min="0" data-width="98" data-height="98" data-bgcolor="#fff" data-fgcolor="#14b1e7" data-max="100" data-readonly="true" data-thickness=".12">
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- end .img-main -->
+          <div class="info-main">
+            <div class="blue-bar">
+              <span class="pull-left">${{ completed_project.amount_donated|floatformat:"0"|intcomma }}</span>
+              <span class="pull-right">{{ completed_project.days_left }} Days Left</span>
+            </div>
+            <!-- end .blue-bar -->
+            <div class="dark-blue-bar">
+              <span class="pull-left actual-energy">{{ completed_project.actual_energy }} lbs CO<sub>2</sub></span>
+              <span class="pull-right">{{ completed_project.donors.count }} Donors</span>
+            </div>
+            <!-- end .blue-bar -->
+          </div>
+          <!-- end .info-main -->
+        </div>
+        <!-- end .module-box -->
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+<!-- end .active-projects-module -->
+
 <div class="our-impacts-module animated">
   <div class="container">
     <div class="title-blue-border title-our-impacts">OUR IMPACTS</div>
@@ -148,7 +209,10 @@
         <div class="module-box">
           <span class="icons icon-home-ok"></span>
           <span class="titles font72">{{ global_impacts.num_projects }}</span>
-          <p class="txt">projects done</p>
+          <p class="txt">
+			solar projects 
+			installed
+		  </p>
         </div>
         <!-- end .module-box -->
       </div>
@@ -271,7 +335,7 @@
 
 <div class="testimonial-module animated">
   <div class="container">
-    <div class="title-blue-border title-testimonial">TESTIMONIAL</div>
+    <div class="title-blue-border title-testimonial">TESTIMONIALS</div>
     <div class="row head-row">
       <ul>
         {% with testimonial_image="images/testimonials/enio_ximenes.png" testimonial_image_mobile="images/testimonials/enio_ximenes.png" %}
@@ -287,6 +351,9 @@
           {% include "base/partials/testimonial-head.html" %}
         {% endwith %}
         {% with testimonial_image="images/testimonials/ralph_silber.png" testimonial_image_mobile="images/testimonials/ralph_silber.png" %}
+          {% include "base/partials/testimonial-head.html" %}
+        {% endwith %}
+		{% with testimonial_image="images/testimonials/nathan_chan.png" testimonial_image_mobile="images/testimonials/nathan_chan.png" %}
           {% include "base/partials/testimonial-head.html" %}
         {% endwith %}
       </ul>
@@ -311,13 +378,17 @@
     {% with testimonial_name="Ralph Silber" testimonial_position="Greening Committee Chair, Kehilla Community Synagogue" testimonial_text="One of our basic values is about community and community building and the importance of that. And because of the crowdfunding model that RE-volv uses, it fit perfectly with our idea. Even if somebody would have handed us a check for the money we needed, that wouldn’t have been our first choice, because by doing the fundraising we were accomplishing one of our other goals which is informing more people about the availability of solar." %}
       {% include "base/partials/testimonial-info-area.html" %}
     {% endwith %}
+	
+	{% with testimonial_name="Nathan Chan" testimonial_position="Donor" testimonial_text="I support RE-volv because after meeting with the team, I could not imagine working with a more sincere, dedicated, and knowledgeable set of people, especially on the scale of the climate problem. They are also solving a very unique problem in the transition to clean energy, targeting the non-profits who do not benefit from current subsidies, while figuring out a way to empower those of us who want to do something, but are not sure how." %}
+      {% include "base/partials/testimonial-info-area.html" %}
+    {% endwith %}
   </div>
 </div>
 <!-- end .testimonial-module -->
 
 <div class="featured-on-module animated">
   <div class="container">
-    <div class="title-blue-border title-featured-on">FEATURED ON</div>
+    <div class="title-blue-border title-featured-on">FEATURED IN</div>
     <div class="carousel-main">
       <div id="featured-on-example-generic" class="carousel slide desktop-show" data-ride="carousel" data-interval="">
         <!-- Indicators -->
@@ -425,10 +496,10 @@
   <div class="container animated">
     <div class="title-white-border title-newsletter">NEWSLETTER SIGNUP</div>
     <div class="group-main">
-      <p>Get our all updates</p>
+      <p>Get all our updates</p>
       <div class="group">
-        <form id="form1" name="form1" class="wufoo  page" autocomplete="off" enctype="multipart/form-data" method="post" novalidate action="https://revolv.wufoo.com/forms/z7x3k7/#public">
-          <input class="btn-blue btn-sign-up" type="submit" value="sign up" />
+        <form id="form1" name="form1" class="wufoo  page" autocomplete="off" enctype="multipart/form-data" novalidate>
+		  <a href="{% url 'signin' %}#signup" class="btn-blue btn-sign-up" type="submit">sign up</a>
           <span class="inputs"><input id="Field0" name="Field0" type="email" spellcheck="false" value="" maxlength="255" tabindex="1" placeholder="youareawesome@example.com" required /></span>
           <div style='height: 0px; overflow: hidden'><label for="comment">Do Not Fill This Out</label>
             <textarea name="comment" id="comment" rows="1" cols="1" ></textarea>
@@ -444,3 +515,4 @@
 <!-- end .newsletter-module -->
 
 {% endblock %}
+

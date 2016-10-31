@@ -22,6 +22,7 @@ urlpatterns = patterns(
     url(r'^my-portfolio/admin/', include('revolv.administrator.urls', namespace='administrator')),
     url(r'^my-portfolio/ambassador/', include('revolv.ambassador.urls', namespace='ambassador')),
     url(r'^my-portfolio/donor/', include('revolv.donor.urls', namespace='donor')),
+    url(r'^my-portfolio/reinvest_list/', base_views.ReinvestmentRedirect.as_view(), name='reinvest_list'),
 
     url(r'^what-we-do/projects/', base_views.ProjectListView.as_view(), name='projects_list'),
     url(r'^signin/$', base_views.SignInView.as_view(), name='signin'),
@@ -49,3 +50,4 @@ urlpatterns = patterns(
     url(r'', include(wagtail_urls)),
 
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+

@@ -207,9 +207,6 @@ def pre_init_user_reinvestment(**kwargs):
     Raises a NotEnoughFundingException before __init__ if there are not enough
     funds for this UserReinvestment.
     """
-    if not is_user_reinvestment_period():
-        raise NotInUserReinvestmentPeriodException()
-
     init_kwargs = kwargs.get('kwargs')
     # can't initialize admin_repayment without required 'project' kwarg
     if not init_kwargs or not init_kwargs.get('user'):
@@ -228,7 +225,7 @@ def pre_save_user_reinvestment(**kwargs):
     instance = kwargs.get('instance')
     project = instance.project
 
-    total_left = project.reinvest_amount_left
+    total_left = project.amount_left
     if total_left <= 0.0:
         raise ProjectNotEligibleException()
     if total_left < float(instance.amount):
